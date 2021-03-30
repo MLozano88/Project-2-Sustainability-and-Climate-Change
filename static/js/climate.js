@@ -7,8 +7,8 @@ function d3PieChart(){
       console.log(data);
 
       // set the dimensions and margins of the graph
-      var width = 950;
-      var height = 700;
+      var width = 2800;
+      var height = 800;
       var margin = 40;
 
       // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
@@ -43,11 +43,16 @@ function d3PieChart(){
       var data_ready = pie(d3.entries(pie_data))
 
       // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-      svg.selectAll('.pieChart')
+      
+      var arcGenerator = d3.arc()
+        .innerRadius(0)
+        .outerRadius(radius)
+      
+      svg.selectAll('mySlices')
       .data(data_ready)
       .enter()
       .append('path')
-      .attr('d', d3.arc()
+      .attr('d', arcGenerator
       .innerRadius(0)
       .outerRadius(radius)
       )
@@ -56,14 +61,17 @@ function d3PieChart(){
       .style("stroke-width", "2px")
       .style("opacity", 0.7)
 
-      svg.selectAll('.pieChart')
+      svg.selectAll('mySlices')
       .data(data_ready)
       .enter()
       .append('text')
-      .text(function(d){ return d.data.country_code})
+      .text(function(d){ return (d.data.key)})
+      // .attr("x",300)
+      // .attr("y",300)
+      // .attr("fill", "white")
       .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
       .style("text-anchor", "middle")
-      .style("font-size", 17)
+      .style("font-size", 11)
 
 
       
@@ -79,8 +87,8 @@ url = "/top20GDP"
 d3.json(url, function (data) {
   console.log(data);
   // set the dimensions and margins of the graph
-  var margin = { top: 20, right: 30, bottom: 40, left: 90 },
-    width = 800 - margin.left - margin.right,
+  var margin = { top: 30, right: 30, bottom: 55, left: 90 },
+    width = 1000 - margin.left - margin.right,
     height = 700 - margin.top - margin.bottom;
   // append the svg object to the body of the page
   var svg = d3.select(".GDPBar")
@@ -109,12 +117,17 @@ d3.json(url, function (data) {
     .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end")
+    .style("font-size", "20px")
+    .attr("fill", "white") 
+    // .attr("fill", "white")
 
     svg.append("text")             
       .attr("transform",
             "translate(" + (width/2) + " ," + 
                            (height + margin.top + 20) + ")")
       .style("text-anchor", "middle")
+      .style("font-size", "22px")
+      .attr("fill", "white")  
       .text("GDP");
   // Y axis
   var y = d3.scaleBand()
@@ -123,13 +136,26 @@ d3.json(url, function (data) {
     .padding(.1);
   svg.append("g")
     .call(d3.axisLeft(y))
-    // svg.append("text")
-    // .attr("transform", "rotate(-90)")
-    // .attr("y", 0 - margin.left)
-    // .attr("x",0 - (height / 2))
-    // .attr("dy", "1em")
-    // .style("text-anchor", "middle")
-    // .text("Country Code");     
+    .selectAll("text")
+    .style("font-size", "20px")
+    .attr("fill", "white") 
+    svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .style("font-size", "22px")
+    .attr("fill", "white")  
+    .text("Country Code");
+    svg.append("text")
+    .attr("x", (width / 2))             
+    .attr("y", 0 - (margin.top / 2))
+    .attr("text-anchor", "middle")  
+    .style("font-size", "20px") 
+    .style("text-decoration", "underline")
+    .attr("fill", "white")  
+    .text("GDP PER COUNTRY");     
   
 
 
@@ -152,8 +178,8 @@ function d3EnergyBar() {
   d3.json(url, function (data) {
     console.log(data);
     // set the dimensions and margins of the graph
-    var margin = { top: 20, right: 80, bottom: 50, left: 180 },
-      width = 800 - margin.left - margin.right,
+    var margin = { top: 30, right: 30, bottom: 55, left: 90 },
+      width = 1000 - margin.left - margin.right,
       height = 700 - margin.top - margin.bottom;
     // append the svg object to the body of the page
     var svg = d3.select(".RenewableBar")
@@ -182,12 +208,16 @@ function d3EnergyBar() {
       .selectAll("text")
       .attr("transform", "translate(-10,0)rotate(-45)")
       .style("text-anchor", "end")
+      .style("font-size", "20px")
+      .attr("fill", "white") 
   
       svg.append("text")             
         .attr("transform",
               "translate(" + (width/2) + " ," + 
                              (height + margin.top + 20) + ")")
         .style("text-anchor", "middle")
+        .style("font-size", "22px")
+        .attr("fill", "white")  
         .text("Renewable Energy Consumption");
     // Y axis
     var y = d3.scaleBand()
@@ -196,18 +226,32 @@ function d3EnergyBar() {
       .padding(.1);
     svg.append("g")
       .call(d3.axisLeft(y))
+      .style("font-size", "20px")
+      .selectAll("text")
+      .style("fill", "white") 
       svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 0 - margin.left)
       .attr("x",0 - (height / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Country Code");     
+      .style("font-size", "22px")
+      .attr("fill", "white")  
+      .text("Country Code"); 
+    
+      svg.append("text")
+      .attr("x", (width / 2))             
+      .attr("y", 0 - (margin.top / 2))
+      .attr("text-anchor", "middle")  
+      .style("font-size", "20px") 
+      .attr("fill", "white")
+      .style("text-decoration", "underline")  
+      .text("RENEWABLE ENERGY CONSUMPTION PER COUNTRY");     
     
   
   
     //Bars
-    svg.selectAll(".GDPBar")
+    svg.selectAll(".RenewableBar")
       .data(data)
       .enter()
       .append("rect")
